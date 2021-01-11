@@ -1,0 +1,205 @@
+<!DOCYYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+			integrity="sha512-PgQMlq+nqFLV4ylk1gwUOgm6CtIIXkKwaIHp/PAIWHzig/lKZSEGKEysh0TCVbHJXCLN7WetD8TFecIky75ZfQ=="
+			crossorigin="anonymous" />
+		<title>Weather App</title>
+
+		<style>
+			*{
+				padding: 0;
+				margin: 0;
+			}
+
+			.box{
+				position: relative;
+				height: 75vh;
+				min-width: 280px;
+				width: 30vw;
+				margin: auto;
+				text-align: center;
+				border-radius: 10px;
+				background-color: #7aadff;
+				transform: translateY(20%);
+				color: #1c1c1c;
+				overflow: hidden;
+			}
+
+			#reload{
+				position: relative;
+				float: right;
+				top: 10px; right: 15px;
+				color: black;
+				-webkit-animation: reload 1s linear;
+				z-index: 2;
+			}
+
+			@-webkit-keyframes reload{
+				from{
+					-webkit-transform: rotate(0deg);
+				}
+				to{
+					-webkit-transform: rotate(180deg);
+				}
+			}
+
+			#reload:hover{
+				cursor: pointer;
+			}
+
+			#weathercon{
+				position: relative;
+				padding-top: 50px;
+				padding-bottom: 40px;
+				font-size: 3em;
+				/*background-color: green;*/
+			}
+
+			.info{
+				padding: 30% 10px 0 10px;
+				/*background-color: red;*/
+			}
+
+			.location, .temp, .tempmin_max{
+				padding-bottom: 10px;
+			}
+
+			#date{
+				padding-bottom: 30px;
+			}
+
+			.wave{
+				width: 400%;
+				padding-top: 400%;
+				border-radius: 40%;
+				position: absolute;
+				left: -150%;
+				top: 40%;
+				opacity: 20%;
+			}
+
+			.-one{
+				background-color: red;
+				-webkit-animation: rotation 9s infinite linear;
+			}
+
+			.-two{
+				background-color: green;
+				-webkit-animation: rotation 11s infinite linear;
+			}
+
+			.-three{
+				background-color: black;
+				-webkit-animation: rotation 13s infinite linear;
+			}
+
+			@-webkit-keyframes rotation{
+				from{
+					-webkit-transform: rotate(359deg);
+				}
+				to{
+					-webkit-transform: rotate(0deg);
+				}
+			}
+		</style>
+
+	</head>
+	<body onload = "JavaScript: AutoRefresh(60000)">
+		<div class="box">
+
+			<div id="reload" onClick="refresh()"><i class="fas fa-sync-alt"></i></div>
+			<div id="weathercon"></div>
+
+			<div class="info">
+				<h2 class="location">
+					<i class="fas fa-street-view"></i>
+					{%location%}, {%country%}
+				</h2>
+				<p id="date">SUN | JAN 10 | 11:10AM</p>
+				<h1 class="temp">{%tempVal%}&deg;C</h1>
+				<h3 class="tempmin_max">Min {%tempMin%}&deg;C | Max {%tempMax%}&deg;C</h3>
+			</div>
+
+				<p class="wave -one"></p>
+				<p class="wave -two"></p>
+				<p class="wave -three"></p>
+
+		</div>
+
+		<script>
+			const currDate = document.getElementById("date");
+			let weathercon = document.getElementById("weathercon");
+
+			const tempStatus = "{%tempStatus%}";
+			if(tempStatus == "Sunny"){
+				weathercon.innerHTML = "<i class='fas fa-sun' style='color: #eccc68'></i>";
+			}
+			else if(tempStatus == "Clouds"){
+				weathercon.innerHTML = "<i class='fas fa-cloud' style='color: #eccc68'></i>";
+			}
+			else if(tempStatus == "Rainy"){
+				weathercon.innerHTML = "<i class='fas fa-cloud-rain' style='color: #eccc68'></i>";
+			}
+			else if(tempStatus == "Haze"){
+				weathercon.innerHTML = "<i class='fas fa-smog' style='color: #000'></i>";
+			}
+			else{
+				weathercon.innerHTML = "<i class='fas fa-cloud' style='color: #eccc68'></i>";
+			}
+
+			function AutoRefresh(t){
+				setTimeout("location.reload(true);", t);
+			}
+
+			function refresh(){
+				location.reload();
+			}
+
+			const getCurrentTime = () => {
+				let currentTime = new Date();
+				var Day = currentTime.getDay();
+				var month = currentTime.getMonth();
+				var date = currentTime.getDate();
+				var hour = currentTime.getHours();
+				var min = currentTime.getMinutes();
+
+				var period = "AM";
+				if(hour > 11){
+					period = "PM";
+					if(hour > 12) hour -= 12;
+				}
+
+				if(min < 10) min = "0" + min;
+
+				var weekDay = ["Sun",
+				"Mon",
+				"Tue",
+				"Wed",
+				"Thu",
+				"Fri",
+				"Sat"];
+				var Months = ["Jan",
+				"Feb",
+				"Mar",
+				"Apr",
+				"May",
+				"June",
+				"July",
+				"Aug",
+				"Sep",
+				"Oct",
+				"Nov",
+				"Dec"];
+
+				return `${weekDay[Day]} | ${date} ${Months[month]} | ${hour}:${min} ${period}`;
+			}
+			currDate.innerHTML = getCurrentTime();
+		</script>
+
+	</body>
+</html>
